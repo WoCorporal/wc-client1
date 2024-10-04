@@ -34,3 +34,22 @@ export async function PUT(
     return Response.json({ message: "Internal server error" }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const deletedDoc = await Exercise.findByIdAndDelete(params.id);
+    if (!deletedDoc) {
+      return Response.json({ message: "Resource not found" }, { status: 404 });
+    }
+    return Response.json({ message: "deleted resource", data: deletedDoc });
+  } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      return Response.json({ message: "Invalid id" }, { status: 400 });
+    }
+    console.log(error);
+    return Response.json({ message: "Internal server error" }, { status: 500 });
+  }
+}
