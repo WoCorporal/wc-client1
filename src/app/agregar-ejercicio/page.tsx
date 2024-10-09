@@ -1,12 +1,15 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createExercise } from "@/services/exercises";
 import { exerciseSchema } from "@/utils/schemas/exercise";
 import { ExerciseType } from "@/config/models_d";
+import FetchExercise from "./__hooks/FetchExercise";
+import Toast from "../components/Toast";
 
 export default function AgregarEjercicio() {
+  const { loading, handleFetch, sendStatus } = FetchExercise();
   const {
     register,
     handleSubmit,
@@ -30,12 +33,15 @@ export default function AgregarEjercicio() {
   };
 
   return (
-    <section className="w-full h-screen flex flex-col items-center py-5 gap-y-4 bg-slate-950">
-      <h1 className="text-lg font-normal text-black bg-[#EBF400] px-2">
+    <section className="w-full min-h-screen h-fit flex flex-col items-center py-5 gap-y-4 bg-[#151515] relative">
+      <h1 className="text-lg font-normal text-[#151515] bg-[#EBF400] px-2">
         <span className="font-bold text-2xl italic">WO</span> Corporal
       </h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
-        <div className="flex gap-x-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-y-4 w-full px-4 sm:px-0 sm:w-3/6 lg:w-2/6"
+      >
+        <div className="flex flex-col w-full gap-y-2">
           <div className="flex flex-col gap-y-2">
             <label
               className="after:content-['*'] after:text-red-600 font-normal text-neutral-300"
@@ -44,11 +50,10 @@ export default function AgregarEjercicio() {
               Nombre
             </label>
             <input
-              required
               {...register("name")}
               placeholder="Ej: Press de banca"
-              //   autoComplete="off"
-              className="bg-slate-900 border-neutral-800 text-white border-[1px] py-2 px-2 focus:border-neutral-500 focus:outline-none"
+              autoComplete="off"
+              className="bg-transparent border-neutral-700 text-white border-[1px] py-2 px-2 rounded-lg focus:border-neutral-500 focus:outline-none"
             />
             {errors.name && (
               <p className="text-red-500 text-base text-small text-center">
@@ -56,7 +61,7 @@ export default function AgregarEjercicio() {
               </p>
             )}
           </div>
-          <div className="flex flex-col gap-y-2">
+          <div className="flex flex-col w-full gap-y-2">
             <label
               className="after:content-['*'] after:text-red-600 font-normal text-neutral-300"
               htmlFor=""
@@ -65,13 +70,25 @@ export default function AgregarEjercicio() {
             </label>
             <select
               {...register("category")}
-              className="bg-slate-900 border-neutral-800 text-white border-[1px] py-[11px] px-2 focus:border-neutral-500 focus:outline-none"
+              className="bg-transparent border-neutral-700 text-neutral-400 border-[1px] py-[11px] px-2 rounded-lg focus:border-neutral-500 focus:outline-none"
+              id="category"
               multiple
             >
-              <option value="resistencia">Resistencia</option>
-              <option value="fortalecimiento">Fortalecimiento</option>
-              <option value="equilibrio">Equilibrio</option>
-              <option value="flexibilidad">Flexibilidad</option>
+              <option className="bg-[#181818] text-white" value="resistencia">
+                Resistencia
+              </option>
+              <option
+                className="bg-[#181818] text-white"
+                value="fortalecimiento"
+              >
+                Fortalecimiento
+              </option>
+              <option className="bg-[#181818] text-white" value="equilibrio">
+                Equilibrio
+              </option>
+              <option className="bg-[#181818] text-white" value="flexibilidad">
+                Flexibilidad
+              </option>
             </select>
             {errors.category && (
               <p className="text-red-500 text-base text-small text-center">
@@ -82,18 +99,17 @@ export default function AgregarEjercicio() {
         </div>
 
         <div className="flex flex-col gap-y-2">
-          <label className="font-normal text-neutral-300" htmlFor="">
+          <label
+            className="after:content-['*'] after:text-red-600 font-normal text-neutral-300"
+            htmlFor=""
+          >
             Descripción
           </label>
           <textarea
             {...register("description")}
-            className="bg-slate-900 border-neutral-800 text-white border-[1px] py-2 px-2 focus:border-neutral-500 focus:outline-none"
+            className="bg-transparent border-neutral-700 text-white border-[1px] py-2 px-2 rounded-lg focus:border-neutral-500 focus:outline-none"
+            id="description"
           ></textarea>
-          {errors.description && (
-            <p className="text-red-500 text-base text-small text-center">
-              {errors.description.message}
-            </p>
-          )}
         </div>
 
         <div className="flex flex-col gap-y-2">
@@ -105,19 +121,26 @@ export default function AgregarEjercicio() {
           </label>
           <select
             {...register("difficulty")}
-            className="bg-slate-900 border-neutral-800 text-neutral-400 border-[1px] py-2 px-2 focus:border-neutral-500 focus:outline-none"
+            className="bg-transparent border-neutral-700 text-neutral-400 border-[1px] py-2 px-4 rounded-lg focus:border-neutral-500 focus:outline-none"
+            name="difficulty"
+            id="difficulty"
           >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
+            <option className="bg-[#181818] text-white" value="1">
+              1
+            </option>
+            <option className="bg-[#181818] text-white" value="2">
+              2
+            </option>
+            <option className="bg-[#181818] text-white" value="3">
+              3
+            </option>
+            <option className="bg-[#181818] text-white" value="4">
+              4
+            </option>
+            <option className="bg-[#181818] text-white" value="5">
+              5
+            </option>
           </select>
-          {errors.difficulty && (
-            <p className="text-red-500 text-base text-small text-center">
-              {errors.difficulty.message}
-            </p>
-          )}
         </div>
 
         <div className="flex flex-col gap-y-2">
@@ -128,9 +151,9 @@ export default function AgregarEjercicio() {
             Video
           </label>
           <input
-            {...register("video")}
+            {...register("videos")}
             autoComplete="off"
-            className="bg-slate-900 border-neutral-800 text-white border-[1px] py-2 px-2 focus:border-neutral-500 focus:outline-none"
+            className="bg-transparent border-neutral-700 text-white border-[1px] py-2 px-2 rounded-lg focus:border-neutral-500 focus:outline-none"
           />
           {errors.video && (
             <p className="text-red-500 text-base text-small text-center">
@@ -138,8 +161,26 @@ export default function AgregarEjercicio() {
             </p>
           )}
         </div>
-        <button className="px-20 py-4 font-semibold text-base text-white bg-blue-700 hover:bg-blue-600 rounded-xl mt-4">
-          Cargar ejercicio
+
+        <button className="sm:px-12 lg:px-20 py-4 font-semibold flex justify-center items-center text-base xl:text-xl text-[#181818] uppercase bg-[#D4FC04] hover:bg-[#ecf400b1] rounded-tl-3xl rounded-br-3xl mt-4">
+          {loading ? (
+            <div className="loader">
+              <div className="bar1"></div>
+              <div className="bar2"></div>
+              <div className="bar3"></div>
+              <div className="bar4"></div>
+              <div className="bar5"></div>
+              <div className="bar6"></div>
+              <div className="bar7"></div>
+              <div className="bar8"></div>
+              <div className="bar9"></div>
+              <div className="bar10"></div>
+              <div className="bar11"></div>
+              <div className="bar12"></div>
+            </div>
+          ) : (
+            "Cargar ejercicio"
+          )}
         </button>
       </form>
     </section>
