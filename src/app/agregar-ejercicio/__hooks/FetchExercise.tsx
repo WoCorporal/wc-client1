@@ -1,56 +1,33 @@
-import { useState } from "react"
+import { useState } from "react";
+import { createExercise } from "@/services/exercises";
+import { ExerciseType } from "@/config/models_d";
 
-type Exercise = {
-    name: string
-    description: string
-    category: string
-    difficulty: number
-    video: string
-}
+export default function FetchExercise() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [sendStatus, setSendStatus] = useState<boolean>(false);
 
-export default function FetchExercise(){
-    const [loading, setLoading] = useState<boolean>(false)
-    const [sendStatus,setSendStatus] = useState<boolean>(false)
+  // Aviso de ejercicio agregado con exito
+  const handleSendStatus = () => {
+    setSendStatus(true);
+    setTimeout(() => {
+      setSendStatus(false);
+    }, 2000);
+  };
 
-    // Aviso de ejercicio agregado con exito
-    const handleSendStatus = ()=>{
-        setSendStatus(true)
-        setTimeout(()=>{
-            setSendStatus(false)
-        },2000)
-    }   
-
-
-    // Enviar ejercicio a la base de datos
-   const handleFetch = ({name,description,difficulty,video,category}:Exercise)=>{
-    const exerciseData = {
-        name: name,
-        description: description,
-        difficulty: difficulty,
-        video: video,
-        category: [category]
+  // Enviar ejercicio a la base de datos
+  const handleFetch = async (exercise: ExerciseType) => {
+    setLoading(true);
+    const result = await createExercise(exercise);
+    setLoading(false);
+    if (!result.error) {
+      handleSendStatus();
     }
-    setLoading(true)
-    fetch("/api/exercise",{
-        method: 'POST',
-        headers: {
-            "Content-type": "application/json"
-        },
-        body: JSON.stringify(exerciseData)
-    })
-    .then((res)=>{
-        console.log(res.json())
-    })
-    .catch(err=>console.log(err))
-    .finally(()=> {
-        handleSendStatus()
-        setLoading(false)
-    })
-   }
-   return{
+    return result;
+  };
+
+  return {
     loading,
     handleFetch,
-    sendStatus
-   }
+    sendStatus,
+  };
 }
-

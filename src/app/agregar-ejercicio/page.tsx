@@ -2,14 +2,13 @@
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createExercise } from "@/services/exercises";
 import { exerciseSchema } from "@/utils/schemas/exercise";
 import { ExerciseType } from "@/config/models_d";
 import FetchExercise from "./__hooks/FetchExercise";
 import Toast from "../components/Toast";
 
 export default function AgregarEjercicio() {
-  const { loading, handleFetch, sendStatus } = FetchExercise();
+  const { loading, sendStatus, handleFetch } = FetchExercise();
   const {
     register,
     handleSubmit,
@@ -23,12 +22,11 @@ export default function AgregarEjercicio() {
   });
 
   const onSubmit: SubmitHandler<ExerciseType> = async (data) => {
-    const result = await createExercise(data);
+    const result = await handleFetch(data);
     if (result.error) {
       alert(result.message);
     } else {
-      reset();
-      alert(`Exercise created.\nID: ${(result.data as { id: string }).id}`);
+      reset(); // reset form
     }
   };
 
@@ -45,12 +43,13 @@ export default function AgregarEjercicio() {
           <div className="flex flex-col gap-y-2">
             <label
               className="after:content-['*'] after:text-red-600 font-normal text-neutral-300"
-              htmlFor=""
+              htmlFor="name"
             >
               Nombre
             </label>
             <input
               {...register("name")}
+              required
               placeholder="Ej: Press de banca"
               autoComplete="off"
               className="bg-transparent border-neutral-700 text-white border-[1px] py-2 px-2 rounded-lg focus:border-neutral-500 focus:outline-none"
@@ -64,7 +63,7 @@ export default function AgregarEjercicio() {
           <div className="flex flex-col w-full gap-y-2">
             <label
               className="after:content-['*'] after:text-red-600 font-normal text-neutral-300"
-              htmlFor=""
+              htmlFor="category"
             >
               Categoría
             </label>
@@ -100,8 +99,8 @@ export default function AgregarEjercicio() {
 
         <div className="flex flex-col gap-y-2">
           <label
-            className="after:content-['*'] after:text-red-600 font-normal text-neutral-300"
-            htmlFor=""
+            className="after:content-['(Opcional)'] after:text-neutral-500 after:ml-2 font-normal text-neutral-300"
+            htmlFor="description"
           >
             Descripción
           </label>
@@ -115,7 +114,7 @@ export default function AgregarEjercicio() {
         <div className="flex flex-col gap-y-2">
           <label
             className="after:content-['*'] after:text-red-600 font-normal text-neutral-300"
-            htmlFor=""
+            htmlFor="difficulty"
           >
             Nivel de dificultad
           </label>
@@ -125,33 +124,29 @@ export default function AgregarEjercicio() {
             name="difficulty"
             id="difficulty"
           >
-            <option className="bg-[#181818] text-white" value="1">
-              1
-            </option>
-            <option className="bg-[#181818] text-white" value="2">
-              2
-            </option>
-            <option className="bg-[#181818] text-white" value="3">
-              3
-            </option>
-            <option className="bg-[#181818] text-white" value="4">
-              4
-            </option>
-            <option className="bg-[#181818] text-white" value="5">
-              5
-            </option>
+            {Array(5)
+              .fill(null)
+              .map((_, i) => (
+                <option
+                  key={i}
+                  className="bg-[#181818] text-white"
+                  value={i + 1}
+                >
+                  {i + 1}
+                </option>
+              ))}
           </select>
         </div>
 
         <div className="flex flex-col gap-y-2">
           <label
             className="after:content-['(Opcional)'] after:text-neutral-500 after:ml-2 text-neutral-300"
-            htmlFor=""
+            htmlFor="video"
           >
             Video
           </label>
           <input
-            {...register("videos")}
+            {...register("video")}
             autoComplete="off"
             className="bg-transparent border-neutral-700 text-white border-[1px] py-2 px-2 rounded-lg focus:border-neutral-500 focus:outline-none"
           />
@@ -162,27 +157,24 @@ export default function AgregarEjercicio() {
           )}
         </div>
 
-        <button className="sm:px-12 lg:px-20 py-4 font-semibold flex justify-center items-center text-base xl:text-xl text-[#181818] uppercase bg-[#D4FC04] hover:bg-[#ecf400b1] rounded-tl-3xl rounded-br-3xl mt-4">
+        <button
+          className="sm:px-12 lg:px-20 py-4 font-semibold flex justify-center items-center text-base xl:text-xl text-[#181818] uppercase bg-[#D4FC04] hover:bg-[#ecf400b1] rounded-tl-3xl rounded-br-3xl mt-4"
+          type="submit"
+        >
           {loading ? (
             <div className="loader">
-              <div className="bar1"></div>
-              <div className="bar2"></div>
-              <div className="bar3"></div>
-              <div className="bar4"></div>
-              <div className="bar5"></div>
-              <div className="bar6"></div>
-              <div className="bar7"></div>
-              <div className="bar8"></div>
-              <div className="bar9"></div>
-              <div className="bar10"></div>
-              <div className="bar11"></div>
-              <div className="bar12"></div>
+              {Array(12)
+                .fill(null)
+                .map((_, i) => (
+                  <div key={i} className={`bar${i + 1}`}></div>
+                ))}
             </div>
           ) : (
             "Cargar ejercicio"
           )}
         </button>
       </form>
+      {sendStatus && <Toast />}
     </section>
   );
 }

@@ -2,7 +2,12 @@ import mongoose from "mongoose";
 
 const schema = new mongoose.Schema(
   {
-    name: { type: String, unique: true, required: true, trim: true },
+    name: {
+      type: String,
+      unique: true,
+      required: [true, "name is required"],
+      trim: true,
+    },
     description: { type: String, trim: true },
     difficulty: {
       type: Number,
