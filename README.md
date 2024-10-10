@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wo-Corporal
 
-## Getting Started
+## Descripción
+Wo-Corporal es una aplicación diseñada para gestionar ejercicios físicos, permitiendo a los entrenadores personales agregar, actualizar y eliminar ejercicios de una base de datos. La aplicación utiliza tecnologías modernas como Next.js, React y MongoDB, y está estructurada para facilitar la validación y gestión de datos.
 
-First, run the development server:
+## Dependencias
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **@hookform/resolvers**: `^3.9.0`  
+   Proporciona resolutores para la biblioteca React Hook Form, permitiendo la validación de formularios.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **mongoose**: `^8.7.0`  
+   Una biblioteca de modelado de objetos MongoDB para Node.js que proporciona una solución basada en esquemas para modelar los datos de tu aplicación.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **next**: `14.2.13`  
+   Framework de React para la creación de aplicaciones web y sitios estáticos, con funciones de renderizado del lado del servidor.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **react**: `^18`  
+   Biblioteca de JavaScript para construir interfaces de usuario.
 
-## Learn More
+5. **react-dom**: `^18`  
+   Paquete que proporciona métodos específicos de la DOM para trabajar con React.
 
-To learn more about Next.js, take a look at the following resources:
+6. **react-hook-form**: `^7.53.0`  
+   Biblioteca para la gestión de formularios en React, que permite un manejo sencillo y eficiente de formularios.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+7. **zod**: `^3.23.8`  
+   Biblioteca para la validación de esquemas y tipos de datos, que permite la creación de validaciones en tiempo de ejecución.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Dependencias de Desarrollo
 
-## Deploy on Vercel
+1. **@types/node**: `^20`  
+   Proporciona tipos de TypeScript para Node.js.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **@types/react**: `^18`  
+   Proporciona tipos de TypeScript para React.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **@types/react-dom**: `^18`  
+   Proporciona tipos de TypeScript para React DOM.
+
+4. **eslint**: `^8`  
+   Herramienta de análisis de código para identificar patrones problemáticos en el código JavaScript.
+
+5. **eslint-config-next**: `14.2.13`  
+   Configuración de ESLint específica para aplicaciones Next.js.
+
+6. **postcss**: `^8`  
+   Herramienta para transformar CSS con JavaScript.
+
+7. **tailwindcss**: `^3.4.1`  
+   Framework CSS de utilidad para construir interfaces personalizadas rápidamente.
+
+8. **typescript**: `^5`  
+   Lenguaje de programación que es un superconjunto de JavaScript, permitiendo la adición de tipos estáticos.
