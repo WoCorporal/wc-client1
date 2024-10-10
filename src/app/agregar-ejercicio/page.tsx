@@ -49,7 +49,6 @@ export default function AgregarEjercicio() {
             </label>
             <input
               {...register("name")}
-              required
               placeholder="Ej: Press de banca"
               autoComplete="off"
               className="bg-transparent border-neutral-700 text-white border-[1px] py-2 px-2 rounded-lg focus:border-neutral-500 focus:outline-none"
