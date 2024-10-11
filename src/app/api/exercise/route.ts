@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { revalidateTag } from "next/cache";
 import exercise from "@/app/_db/models/exercises";
 import { exerciseSchema } from "@/utils/schemas/exercise";
 import { MONGODB_DUPLICATE_KEY_ERROR } from "@/utils/codeErrors/mongodb";
@@ -17,6 +18,7 @@ export async function POST(req: Request) {
 
   try {
     const savedExercise = await exercise.create(valdiation.data);
+    revalidateTag("get-all-exercises");
     return Response.json({ data: { id: savedExercise.id } }, { status: 201 });
   } catch (error) {
     if ((error as { code: number }).code === MONGODB_DUPLICATE_KEY_ERROR) {
@@ -37,4 +39,15 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+export async function GET() {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("");
+    }, 3000); // simulate a timeout of 3 seconds
+  });
+
+  const exercises = await exercise.find();
+  return Response.json({ data: exercises });
 }
