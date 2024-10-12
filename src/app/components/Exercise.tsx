@@ -1,3 +1,5 @@
+import Container from "@mui/material/Container";
+import { ExerciseTable } from "@/app/components/DataGrid";
 import { getExercises } from "@/services/exercises";
 
 export async function ExerciseList() {
@@ -8,10 +10,8 @@ export async function ExerciseList() {
   }
 
   return (
-    <ul>
-      {data.data?.map((e) => (
-        <li key={e.name}>{e.name}</li>
-      ))}
-    </ul>
+    <Container maxWidth="lg">
+      <ExerciseTable rows={data.data!} />
+    </Container>
   );
 }

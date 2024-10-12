@@ -7,6 +7,8 @@ type RequestResponse<TData> = {
   message?: string;
 };
 
+type Exercise = ExerciseType & { _id: string };
+
 export async function createExercise(
   exercise: ExerciseType
 ): Promise<RequestResponse<{ id: string }>> {
@@ -27,7 +29,7 @@ export async function createExercise(
   return { error: false, data: data.data };
 }
 
-export async function getExercises(): Promise<RequestResponse<ExerciseType[]>> {
+export async function getExercises(): Promise<RequestResponse<Exercise[]>> {
   const promise = await fetch(`${BASE_URL}/api/exercise`, {
     next: { tags: ["get-all-exercises"] },
   });
