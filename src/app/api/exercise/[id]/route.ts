@@ -1,5 +1,6 @@
 import { revalidateTag } from "next/cache";
 import mongoose from "mongoose";
+import connectDB from "@/app/_db/conexion";
 import Exercise from "@/app/_db/models/exercises";
 import { exerciseSchema } from "@/utils/schemas/exercise";
 
@@ -8,6 +9,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    await connectDB();
     const body = await req.json();
     // partial() makes all fields optional
     const validation = exerciseSchema.partial().safeParse(body);
@@ -43,6 +45,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    await connectDB();
     const deletedDoc = await Exercise.findByIdAndDelete(params.id);
     if (!deletedDoc) {
       return Response.json({ message: "Resource not found" }, { status: 404 });
