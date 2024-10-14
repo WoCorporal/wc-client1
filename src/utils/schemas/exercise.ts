@@ -26,6 +26,9 @@ export const exerciseSchema = z
       .or(z.literal("")),
     category: z.preprocess(
       (value) => {
+        if (typeof value === "string") {
+          return value.split(",");
+        }
         if (Array.isArray(value) && value.every((v) => typeof v === "string")) {
           return value.map((v) => v.toLocaleLowerCase());
         }
