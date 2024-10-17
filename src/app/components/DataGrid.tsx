@@ -8,7 +8,6 @@ import {
   GridActionsCellItem,
 } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
-import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { z } from "zod";
 import { updateExercise, deleteExercise } from "@/services/exercises";
