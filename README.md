@@ -51,3 +51,37 @@ Wo-Corporal es una aplicación diseñada para gestionar ejercicios físicos, per
 
 8. **typescript**: `^5`  
    Lenguaje de programación que es un superconjunto de JavaScript, permitiendo la adición de tipos estáticos.
+
+
+# Documentación de la API de Ejercicios
+
+## Endpoints
+
+### 1. Obtener todos los ejercicios
+- **Ruta**: `/api/exercise`
+- **Método**: `GET`
+- **Descripción**: Devuelve todos los ejercicios de la base de datos.
+- **Parámetros**: Ninguno
+- **Respuesta**:
+  - **200 OK**: Lista de ejercicios
+  - **500 Internal Server Error**: Error al obtener los ejercicios.
+
+### 2. Filtrar ejercicios por categoría y/o dificultad
+- **Ruta**: `/api/exercise?category={category}&difficulty={difficulty}`
+- **Método**: `GET`
+- **Descripción**: Filtra los ejercicios por categoría y/o dificultad.
+- **Parámetros**:
+  - `category` (opcional): Filtra los ejercicios por categoría.
+  - `difficulty` (opcional): Filtra los ejercicios por nivel de dificultad.
+- **Ejemplo de uso**:
+  - Obtener ejercicios de la categoría "resistencia":
+    ```
+    GET /api/exercise?category=resistencia
+    ```
+  - Obtener ejercicios de dificultad 3:
+    ```
+    GET /api/exercise?difficulty=3
+    ```
+- **Respuesta**:
+  - **200 OK**: Lista de ejercicios filtrados
+  - **500 Internal Server Error**: Error al filtrar los ejercicios.
