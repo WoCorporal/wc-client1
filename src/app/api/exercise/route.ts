@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { revalidateTag } from "next/cache";
+import connectDB from "@/app/_db/conexion";
 import exercise from "@/app/_db/models/exercises";
 import { exerciseSchema } from "@/utils/schemas/exercise";
 import { MONGODB_DUPLICATE_KEY_ERROR } from "@/utils/codeErrors/mongodb";
@@ -7,30 +9,36 @@ import { NextResponse } from "next/server";
 
 // POST: Crear un nuevo ejercicio
 export async function POST(req: Request) {
-  // Leer el cuerpo de la solicitud
-  const body = await req.json();
-
-  // Validar los datos con Zod
-  const validation = exerciseSchema.safeParse(body);
-  if (!validation.success) {
-    console.log(validation.error);
-    return NextResponse.json(
-      { message: validation.error.issues[0].message }, 
-      { status: 400 }
-    );
-  }
-
   try {
     // Conectar a la base de datos
-    await dbConnect();
+    await connectDB();
+    // Leer el cuerpo de la solicitud
+    const body = await req.json();
+
+    // Validar los datos con Zod
+    const validation = exerciseSchema.safeParse(body);
+    if (!validation.success) {
+      console.log(validation.error);
+      return NextResponse.json(
+        { message: validation.error.issues[0].message },
+        { status: 400 }
+      );
+    }
 
     // Crear el ejercicio y guardarlo en la base de datos
     const savedExercise = await exercise.create(validation.data);
-    return NextResponse.json({ data: { id: savedExercise.id } }, { status: 201 });
+    revalidateTag("get-all-exercises");
+    return NextResponse.json(
+      { data: { id: savedExercise.id } },
+      { status: 201 }
+    );
   } catch (error) {
     // Manejo de errores específicos de MongoDB (clave duplicada)
     if ((error as { code: number }).code === MONGODB_DUPLICATE_KEY_ERROR) {
-      return NextResponse.json({ message: "duplicate key error" }, { status: 400 });
+      return NextResponse.json(
+        { message: "duplicate key error" },
+        { status: 400 }
+      );
     }
 
     // Manejo de errores de validación de Mongoose
@@ -38,7 +46,7 @@ export async function POST(req: Request) {
       const fieldError = error.errors[Object.keys(error.errors)[0]];
       if (fieldError.kind === "required") {
         return NextResponse.json(
-          { message: `${fieldError.path} is required` }, 
+          { message: `${fieldError.path} is required` },
           { status: 400 }
         );
       }
@@ -47,7 +55,7 @@ export async function POST(req: Request) {
     // Manejo general de errores
     console.log(error);
     return NextResponse.json(
-      { message: "Internal server error." }, 
+      { message: "Internal server error." },
       { status: 500 }
     );
   }
@@ -80,13 +88,19 @@ export async function GET(req: Request) {
     const exercises = await exercise.find(filter);
 
     // Si no hay resultados
-    if (exercises.length === 0) {
-      return NextResponse.json({ message: "No exercises found" }, { status: 404 });
-    }
+    // if (exercises.length === 0) {
+    //   return NextResponse.json(
+    //     { message: "No exercises found" },
+    //     { status: 200 }
+    //   );
+    // }
 
-    return NextResponse.json(exercises, { status: 200 });
+    return NextResponse.json({ data: exercises }, { status: 200 });
   } catch (error) {
     console.error("Error al obtener los ejercicios:", error);
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
